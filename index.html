@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="english">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>Consent Widget</title>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel="stylesheet" href="./styles.css" />
+
+  </head>
+  <body>
+    <div class="widget-container">
+      <div class="header-language-wrapper-container">
+        <div id="language-wrapper" class="d-none">
+          <div class="dropdown">
+            <label for="langSelect">
+              Language Preference <br />
+            </label>
+            <select id="langSelect"></select>
+          </div>
+        </div>
+      </div>
+      <div id="pc-tabs" class="pc-tabs d-none">
+        <div class="pc-tab-group">
+          <div id="tab-current" class="pc-tab active">
+            Current Preference
+          </div>
+          <div id="tab-history" class="pc-tab">
+            Preference History
+          </div>
+        </div>
+      <div id="downloadHistoryBtn" class="download-history-link hidden">
+      <i class="ri-download-2-line"></i> Download Current Preference
+      </div>
+      </div>
+
+      <div class="header-container">
+
+        <div id="logo-area" class="logo-area">
+        </div>
+      </div>
+
+      <div class="preview-statements">
+        <div id="consent-root">Loading...</div>
+
+        <div id="historyTab" class="hidden">
+          <div
+            id="historyContainer"
+            class="history-scroll"
+          ></div>
+        </div>
+
+        <div id="toast"></div>
+      </div>
+
+      <div class="full-width-footer-border" id="full-width-footer-border"></div>
+
+      <div
+        id="error-message"
+        class="error-message form-error"
+      ></div>
+
+      <div class="button-group" id="button-group">
+        <button class="cancel d-none" id="cancelBtn">
+          Cancel
+        </button>
+        <button class="submit d-none" id="submitBtn">
+          Submit
+        </button>
+      </div>
+    </div>
+
+<script>
+  window.consentWidgetConfig = {
+    preferenceFormId: "51190fcd-45d8-46f8-b5db-391fd3b5e1c0",
+    apiDomain: "https://8foozo.pre-dataprivacy.com",
+    preferenceDetailsApiUrl:"https://8foozo.pre-dataprivacy.com/cpm-api/open-api/v1/preference/v1/export/getPreferenceDetails",
+    preferenceHistoryApiUrl:"https://8foozo.pre-dataprivacy.com/cpm-api/open-api/v1/preference/v1/export/auditSearch/scroll",
+    downloadHistoryPdfApiUrl:"https://8foozo.pre-dataprivacy.com/cpm-api/open-api/v1/preference/v1/export/downloadPreferenceHistoryPdf",
+    submitApiUrl:"https://8foozo.pre-dataprivacy.com/cpm-api/open-api/v1/preference/v1/createOrUpdateConsent",
+    signatureServiceUrl: "https://8foozo.pre-dataprivacy.com/cpm-sign",
+    userToken: "Bearer bearer",
+    customAttributes: {},
+    showButtons: true,
+    showLanguageDropdown: true,
+    enableCheckboxes: true,
+    enableRadioButtons: true,
+    enableDropdowns: true,
+    footerAlignment: "left",
+    receivedType:"WEB",
+    customHeaders: {
+        "test-header-1": "test-1",
+        "test-header-2": "test-2"
+    }
+  };
+
+  // Function for Android WebView integration to dynamically set user 
+  // Called from Android native code before loading the consent widget
+  window.updateConsentConfig = function(token) {
+  if (token) {
+    window.consentWidgetConfig.userToken = token;
+  }
+
+  // Dynamically load script.js only once to prevent multiple script injections
+    if (!window.scriptLoaded) {
+        const script = document.createElement('script');
+        script.src = 'script.js';
+        // SRI (Subresource Integrity) ensures script hasn't been tampered with
+        // crossOrigin required for SRI validation
+        script.crossOrigin = 'anonymous';
+        script.integrity = "sha384-yqFLyD7c2/Ugtgc4Mmwk4EL9ug08Rb8t6SD6JB51GniLJu//++weJ3EPIm4YSVss";
+        script.onload = function() {
+          window.scriptLoaded = true;
+        };
+        document.body.appendChild(script);
+      }
+
+
+  return "Config updated successfully";
+};
+  
+</script>
+  
+<!--
+  Optional: Use custom buttons if the parent application
+  wants to control Consent Form submission and reset actions.
+
+  Note:
+  - Set `showButtons: false` in the widget configuration.
+  - Submit button calls `consentWidget.submit()`.
+  - Clear button calls `consentWidget.reset()`.
+-->
+
+<!--Example-->
+
+<!--
+<button id="parentClearBtn" style="padding:10px 16px; background:#dc2626; color:white; border:none; border-radius:6px;">
+  Clear Consent
+</button>
+<button id="parentSubmitBtn" style="padding:10px 16px; background:#16a34a; color:white; border:none; border-radius:6px;">
+  Submit Consent
+</button>
+
+<script>
+  document.getElementById("parentSubmitBtn").addEventListener("click", async () => {
+    if (!window.consentWidget) return;
+
+    const result = await window.consentWidget.submit();
+
+    if (result.success) {
+      // navigate next page here
+      // window.location.href = "/next-page";
+    }
+  });
+
+  document.getElementById("parentClearBtn").addEventListener("click", () => {
+    if (!window.consentWidget) return;
+
+    window.consentWidget.reset();
+  });
+-->
+
+</script>
+<!--comment below line in case of Android integration -->
+<script src="./script.js" integrity="sha384-yqFLyD7c2/Ugtgc4Mmwk4EL9ug08Rb8t6SD6JB51GniLJu//++weJ3EPIm4YSVss" crossorigin="anonymous"></script>
+  </body>
+</html>
+   
