@@ -58,6 +58,26 @@
         "test-header-2": "test-2"
       }
     };
+// OTP verification, used when the consent form has OTP enabled.
+// Set the end user's mobile (required, 10 digits) and email (optional) before the user taps Generate OTP.
+      // Do not pass them in the page URL.
+      // The user taps Generate OTP, enters the OTP and taps Verify and Submit: one tap verifies the OTP and saves
+      // the consent. An OTP form has no separate Submit / Cancel button.
+      mobile: "8669021072",
+      email: "",
+      sendOtpApiUrl: "https://perf.pre-dataprivacy.com/cpm-api/open-api/v1/consent/v1/sendOtp",
+      verifyOtpApiUrl: "https://perf.pre-dataprivacy.com/cpm-api/open-api/v1/consent/v1/verifyOtp",
+      // Called once after the consent is saved; response.consentCapturedAt has the consent date and timestamp.
+      onConsentSubmitted: function (response) {
+        // e.g. store response.consentCapturedAt or enable a button on this page
+      },
+      // With showButtons: false, called when the form can (true) or cannot (false) be submitted:
+      // set the disabled state of this page's Submit button to !isReady.
+      // For an OTP form it is ready once the OTP is entered; consentWidget.submit() then verifies it and saves.
+      onSubmitReady: function (isReady) {
+        // e.g. document.getElementById("parentSubmitBtn").disabled = !isReady;
+      }
+    };
 
   // Function for Android WebView integration to dynamically set tenant token and data principal ID
   // Called from Android native code before loading the consent widget
